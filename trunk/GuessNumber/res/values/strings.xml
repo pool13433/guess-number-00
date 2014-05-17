@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">GuessNumber</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="menu_signle">SinglePlayer</string>
+    <string name="menu_muti">MutiPlayer</string>
+    <string name="menu_help">Help</string>
+    <string name="menu_topscore">Top 5 HightScore</string>
+    <string name="menu_exit">Exit</string>
+    <string name="label_singlename">Player1 Name:</string>
+    <string name="label_mutiname">Player2 Name:</string>
+    <string name="button_level">Select Level</string>
+    <string name="title_activity_main_muti_player">MutiPlayer</string>
+    <string name="title_activity_main_single_player">SinglePlayer</string>
+    <string name="title_activity_main_game">MainScreenGame</string>
+    <string name="label_score">Score: </string>
+    <string name="label_no">No: </string>
+    <string name="button_check">Check Now</string>
+    <string name="label_position">Position Correct:</string>
+    <string name="label_number">Position Incorrect:</string>
+    <string name="label_postion_number">position and number :</string>
+    <string name="label_numberold_input">Number LastInput: </string>
+    <string name="label_title_list">Old Data:</string>
+    <string name="label_title_hightscore">Top 5 HightScore</string>
+    <string name="label_win">You Win: </string>
+    <string name="label_lose">You Lose: </string>
+    <string name="btn_ok">OK</string>
+    <string name="btn_cancle">CANCLE</string>
+    <string name="btn_exit">Exit</string>
+    <string name="btn_main_menu">Back Main Menu</string>
+    <string name="btn_new_game">New Game</string>
+    <string name="label_name">Name: </string>
+    <string name="label_date">Date Play: </string>
+    <string name="title_activity_main_high_score">MainHighScore</string>
+
+</resources>

@@ -1,16 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
+	<!-- StringENG -->
     <string name="app_name">GuessNumber</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
     <string name="menu_signle">SinglePlayer</string>
     <string name="menu_muti">MutiPlayer</string>
     <string name="menu_help">Help</string>
-    <string name="menu_topscore">Top 5 HightScore</string>
-    <string name="menu_exit">Exit</string>
-    <string name="label_singlename">Player1 Name:</string>
-    <string name="label_mutiname">Player2 Name:</string>
+    <string name="menu_exit">Exit</string>    
+    
+    <string name="menu_topscore">Top 5 HightScore</string>    
     <string name="button_level">Select Level</string>
     <string name="title_activity_main_muti_player">MutiPlayer</string>
     <string name="title_activity_main_single_player">SinglePlayer</string>
@@ -20,12 +19,15 @@
     <string name="button_check">Check Now</string>
     <string name="label_position">Position Correct:</string>
     <string name="label_number">Position Incorrect:</string>
-    <string name="label_postion_number">position and number :</string>
     <string name="label_numberold_input">Number LastInput: </string>
     <string name="label_title_list">Old Data:</string>
     <string name="label_title_hightscore">Top 5 HightScore</string>
-    <string name="label_win">You Win: </string>
-    <string name="label_lose">You Lose: </string>
+    <string name="label_singlename">P1:: </string>
+    <string name="label_mutiname">P2:: </string>
+    <string name="label_win1">P1 W: </string>
+    <string name="label_win2">P2 W: </string>
+    <string name="label_lose1">P1 L: </string>
+    <string name="label_lose2">P2 L: </string>
     <string name="btn_ok">OK</string>
     <string name="btn_cancle">CANCLE</string>
     <string name="btn_exit">Exit</string>
@@ -34,5 +36,49 @@
     <string name="label_name">Name: </string>
     <string name="label_date">Date Play: </string>
     <string name="title_activity_main_high_score">MainHighScore</string>
-
+	<string name="label_progress">Health: </string>
+	<string name="label_"></string>
+	<string name="btn_startgame">Game Start</string>
+	<string name="btn_lose">Your Lose !</string>
+	<string name="msg_title_exitEng">Exit Game</string>
+	<string name="msg_content_exitEng">You are Exit of the game Y/N</string>
+	<string name="msg_waringEng">Please Input data 4 digit</string>
+	<string name="msg_title_closeEng">Exit Game</string>
+	<string name="msg_content_closeEng">Stop Game Now Back To Main Game </string>
+	<!-- StringTH -->
+	 <string name="app_nameTh">เกมทายตัวเลข</string>
+    <string name="action_settingsTh">ตั้งค่า</string>
+    <string name="menu_signleTh">เล่นคนเดียว</string>
+    <string name="menu_mutiTh">เล่นสองคน</string>
+    <string name="menu_helpTh">ช่วยเหลือ</string>
+    <string name="menu_exitTh">ออกจากเกม</string>    
+    
+    <string name="menu_topscoreTh">5 อันดับคะแนนสูงสุด</string>    
+    <string name="button_levelTh">เลือกระดับ ความยากของเกม</string>
+    <string name="title_activity_main_muti_playerTh">เล่นสอลคนน</string>
+    <string name="title_activity_main_single_playerTh">เล่นคนเดียว</string>
+    <string name="title_activity_main_gameTh">หน้าจอเกม</string>
+    <string name="label_scoreTh">คะแนน: </string>
+    <string name="label_noTh">รอบ: </string>
+    <string name="button_checkTh">ตรวจคำตอบ</string>
+    <string name="label_positionTh">มี ถูกตำแหน่ง:</string>
+    <string name="label_numberTh">มี ไม่ถูกตำแหน่ง:</string>
+    <string name="label_numberold_inputTh">Number LastInput: </string>
+    <string name="label_title_listTh">ข้อมูลที่กรอกไปแล้ว:</string>
+    <string name="label_title_hightscoreTh">คะแนนสูงสุด 5 อันดับแรก</string>
+    <string name="label_singlenameTh">ผู้เล่น 1:: </string>
+    <string name="label_mutinameTh">ผู้เล่น 2:: </string>
+    <string name="btn_okTh">ตกลง</string>
+    <string name="btn_cancleTh">ยกเลิก</string>
+    <string name="btn_exitTh">ออก</string>
+    <string name="btn_main_menuTh">กลับสู้หน้าหลัก</string>
+    <string name="btn_new_gameTh">เริ่มเกมใหม่</string>
+    <string name="label_nameTh">ชื่อ: </string>
+    <string name="label_dateTh">วันที่เล่น: </string>
+    <string name="title_activity_main_high_scoreTh">คะแนนสูงสุด 5 อันดับแรก</string>
+	<string name="label_progressTh">พลังชีวิต: </string>
+	<string name="btn_startgameTh">เริ่มเกม</string>
+	
+	<string name="msg_title_exitTh">ยืนยันการออกจากระบบ</string>
+	<string name="msg_content_exitTh">คุณกำลังจะออกจากโปรแกรม</string>
 </resources>

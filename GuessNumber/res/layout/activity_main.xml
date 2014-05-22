@@ -33,7 +33,7 @@
         android:gravity="center_vertical|center_horizontal" >
 
         <ImageView
-            android:id="@+id/imageView4"
+            android:id="@+id/imgPosition4"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/icon_2_64x64" />
@@ -54,7 +54,7 @@
         android:gravity="center_vertical|center_horizontal" >
 
         <ImageView
-            android:id="@+id/imageView3"
+            android:id="@+id/imgPosition3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/icon_highscore64x64" />
@@ -75,7 +75,7 @@
         android:gravity="center_vertical|center_horizontal" >
 
         <ImageView
-            android:id="@+id/imageView2"
+            android:id="@+id/imgMutiPlay"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/icon_helpgame64x64" />

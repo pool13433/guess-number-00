@@ -6,7 +6,6 @@ import java.util.Date;
 import java.util.List;
 
 import com.example.bean.GuessBean;
-import com.example.guessnumber.R;
 
 import android.app.AlertDialog;
 import android.content.ContentValues;

@@ -90,7 +90,7 @@ public class MainActivity extends ActionBarActivity {
 		dialog.setTitle("Top 5 HighScore Player");
 
 		listViewData = (ListView) dialog.findViewById(R.id.list_Score);
-		btnClose = (ImageView) dialog.findViewById(R.id.imgDialogClose);
+		btnClose = (ImageView) dialog.findViewById(R.id.imgPosition1);
 		btnClose.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -115,9 +115,9 @@ public class MainActivity extends ActionBarActivity {
 		@Override
 		public void onClick(View v) {
 			new AlertDialog.Builder(MainActivity.this)
-					.setTitle("ยืนยันการออกจากระบบ")
-					.setMessage("คุณกำลังจะออกจากโปรแกรม")
-					.setNegativeButton("CANCEL",
+					.setTitle(R.string.msg_title_exitEng)
+					.setMessage(R.string.msg_content_exitEng)
+					.setNegativeButton(R.string.btn_cancle,
 							new DialogInterface.OnClickListener() {
 								@Override
 								public void onClick(DialogInterface dialog,
@@ -125,7 +125,7 @@ public class MainActivity extends ActionBarActivity {
 
 								}
 							})
-					.setPositiveButton("OK",
+					.setPositiveButton(R.string.btn_ok,
 							new DialogInterface.OnClickListener() {
 								@Override
 								public void onClick(DialogInterface dialog,

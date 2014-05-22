@@ -21,6 +21,7 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -31,7 +32,9 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.os.Build;
@@ -41,8 +44,10 @@ public class MainGame extends ActionBarActivity {
 	Button btnCheck;
 	EditText txtInputKey;
 	TextView txt_player1;
+	TextView txt_player2;
 	TextView txt_no;
-	TextView txt_score;
+	TextView txt_score1;
+	TextView txt_score2;
 	ImageView imgPosition1;
 	ImageView imgPosition2;
 	ImageView imgPosition3;
@@ -52,12 +57,18 @@ public class MainGame extends ActionBarActivity {
 	TextView txtPositionNumber;
 	TextView txtLastInput;
 	ListView listViewData;
-	TextView txtWin;
-	TextView txtLose;
+	TextView txtWin1;
+	TextView txtLose1;
+	TextView txtWin2;
+	TextView txtLose2;
 	ImageView imgClose;
 	ImageView imgZoom;
 	ImageView imgNewGame;
 	ImageView imgAnswer;
+	ProgressBar progressBar;
+	LinearLayout layout_p1_name;
+	LinearLayout layout_p1_score;
+	LinearLayout layout_p1_Y_L;
 
 	// จำนวนตัวเลขที่ ถูก มีเหมือน คำตอบ ถูกตำแหน่ง
 	int position = 0;
@@ -70,12 +81,22 @@ public class MainGame extends ActionBarActivity {
 	// ตัวเลขที่ กรอกล่าสุด
 	String no_lastinput = "";
 	// จำนวน ครั้งที่ชนะ
-	int no_win = 0;
-	int no_lose = 0;
-	int score = 0;
+	// player 1
+	int no_win1 = 0;
+	int no_lose1 = 0;
+	int score1 = 0;
+	//player2
+	int no_win2 = 0;
+	int no_lose2 = 0;
+	int score2 = 0;
+	// รอบของการเล่น
+	int turnAround = 1; // 1 = p1 ,2 = p2
 	// Id Player1
 	Integer player1 = null;
 	Integer player2 = null;
+	
+	// สถานะของเกม เล่นคนเดียว หรือ เล่นสองคน
+	int STATUS_PLAYER_GAME = 0;
 
 	// คำตอบ
 	private String answer = "";
@@ -87,7 +108,7 @@ public class MainGame extends ActionBarActivity {
 			R.drawable.icon03_48x48, R.drawable.icon04_48x48,
 			R.drawable.icon05_48x48, R.drawable.icon06_48x48,
 			R.drawable.icon07_48x48, R.drawable.icon08_48x48,
-			R.drawable.icon09_48x48, };
+			R.drawable.icon09_48x48, R.drawable.icon_questionmark48x48};
 
 	static final int ANSWER_DIGIT = 4;
 
@@ -101,55 +122,101 @@ public class MainGame extends ActionBarActivity {
 		// connect database
 		this.db = new GuessDataSource(MainGame.this);
 
-		//
+		layout_p1_name = (LinearLayout)findViewById(R.id.layout_p2_name);
+		layout_p1_score = (LinearLayout)findViewById(R.id.layout_p2_score);
+		layout_p1_Y_L = (LinearLayout)findViewById(R.id.layout_p2_Y_L);
+		
 		btnCheck = (Button) findViewById(R.id.btn_check);
 		btnCheck.setOnClickListener(this.btnCheckAnswer);
+		
 		txtInputKey = (EditText) findViewById(R.id.txt_inputKey);
 		txtInputKey.addTextChangedListener(this.textOnChang);
-		imgPosition1 = (ImageView) findViewById(R.id.imgDialogClose);
-		imgPosition2 = (ImageView) findViewById(R.id.imageView2);
-		imgPosition3 = (ImageView) findViewById(R.id.imageView3);
-		imgPosition4 = (ImageView) findViewById(R.id.imageView4);
+		
+		imgPosition1 = (ImageView) findViewById(R.id.imgPosition1);
+		imgPosition2 = (ImageView) findViewById(R.id.imgMutiPlay);
+		imgPosition3 = (ImageView) findViewById(R.id.imgPosition3);
+		imgPosition4 = (ImageView) findViewById(R.id.imgPosition4);
+		
 		txtNumber = (TextView) findViewById(R.id.txt_nember);
 		txtLastInput = (TextView) findViewById(R.id.txt_no_old_input);
 		imgZoom = (ImageView) findViewById(R.id.imgZoom);
 		imgZoom.setOnClickListener(this.listViewClick);
-		txtWin = (TextView) findViewById(R.id.txt_you_win);
-		txtLose = (TextView) findViewById(R.id.txt_you_lose);
+		
+		txtWin1 = (TextView) findViewById(R.id.txt_you_win1);
+		txtLose1 = (TextView) findViewById(R.id.txt_you_lose1);
+		
+		txtWin2 = (TextView) findViewById(R.id.txt_you_win2);
+		txtLose2 = (TextView) findViewById(R.id.txt_you_lose2);
+		
 		txtPosition = (TextView) findViewById(R.id.txt_position);
 		imgClose = (ImageView) findViewById(R.id.imgClose);
 		imgClose.setOnClickListener(this.dialogClose);
 		txt_player1 = (TextView) findViewById(R.id.txt_result_single);
-		txt_no = (TextView) findViewById(R.id.txt_result_no);
-		txt_score = (TextView) findViewById(R.id.txt_result_score);
+		txt_player2 = (TextView)findViewById(R.id.txt_result_muti);		
+		txt_score1 = (TextView) findViewById(R.id.txt_result_score1);
+		txt_score2 = (TextView) findViewById(R.id.txt_result_score2);
+		
 		imgNewGame = (ImageView) findViewById(R.id.imgNewGame);
 		imgNewGame.setOnClickListener(this.btnNewGame);
-		imgAnswer = (ImageView)findViewById(R.id.imgAnswer);
+		
+		txt_no = (TextView) findViewById(R.id.txt_result_no);
+		
+		imgAnswer = (ImageView) findViewById(R.id.imgAnswer);
 		imgAnswer.setOnClickListener(this.btnAnswer);
-		// get data form MainSinglePlayer.Class
+		
+		progressBar = (ProgressBar) MainGame.this
+				.findViewById(R.id.progressBarNo);
+		
+		
+		// ตรวจสอบ จำนวนผู้เล่นเกม
+		
 		Intent i = getIntent();
-
-		txt_player1.setText(String.valueOf(i.getStringExtra("player")));
-
+		if (i.getStringExtra("player2") != null) {
+			txt_player2.setText(String.valueOf(i.getStringExtra("player2")));
+			this.STATUS_PLAYER_GAME = 2;
+			layout_p1_name.setVisibility(View.VISIBLE);
+			layout_p1_score.setVisibility(View.VISIBLE);
+			layout_p1_Y_L.setVisibility(View.VISIBLE);			
+		}else{
+			// hide component ทุกตัวที่เกี่ยวกับ player 2
+			layout_p1_name.setVisibility(View.INVISIBLE);
+			layout_p1_score.setVisibility(View.INVISIBLE);
+			layout_p1_Y_L.setVisibility(View.INVISIBLE);
+		}
+		txt_player1.setText(String.valueOf(i.getStringExtra("player1")));		
 		this.levelIndex = i.getIntExtra("level", 1);
-
+		
 		this.setLabel();
 		this.startGame();
 		this.setGameLevel();
+		this.loadProgressBarNo(no);
 	}
 
 	private OnClickListener btnNewGame = new OnClickListener() {
+		@SuppressLint("NewApi")
 		@Override
 		public void onClick(View v) {
-
-			reStartGame();
-			no_lose ++;
+			AlertDialog.Builder dialog = new AlertDialog.Builder(MainGame.this);
+			dialog.setTitle("New Game Start Now");
+			dialog.setMessage("New Game Start Now If You Click Game Start ");
+			dialog.setCancelable(false);
+			dialog.setNegativeButton(R.string.btn_startgame, new DialogInterface.OnClickListener() {
+				
+				@Override
+				public void onClick(DialogInterface arg0, int arg1) {
+					reStartGame();
+					no_lose1++;
+				}
+			});		
+			dialog.create().show();
 		}
 	};
+
 	private OnClickListener btnAnswer = new OnClickListener() {
 		@Override
 		public void onClick(View v) {
-			dialogEndGame("End Game", "Answer: "+answer+"\n Your Selected Menu ");
+			dialogEndGame("End Game", "Answer: " + answer
+					+ "\n Your Selected Menu ");
 		}
 	};
 	private OnClickListener btnCheckAnswer = new OnClickListener() {
@@ -202,7 +269,10 @@ public class MainGame extends ActionBarActivity {
 
 				// get String Form EditText
 				no_lastinput = String.valueOf(txtInputKey.getText());
-				
+
+				// ครั้งที่เล่น + 1
+				no++;
+
 				// ListView Show Add Item Data
 				listItem.add(Integer.valueOf((listItem.size() + 1))
 						+ ": [ "
@@ -216,42 +286,42 @@ public class MainGame extends ActionBarActivity {
 						+ getApplicationContext().getString(
 								R.string.label_number) + " ["
 						+ String.valueOf(txtNumber.getText()) + " ]");
-				// ครั้งที่เล่น + 1
-				no++;
-				
+
 				// load View
 				setLabel();
-				
+				loadProgressBarNo(no);
+
 				// Clear data InputKey
 				txtInputKey.setText("");
 
 				// ตรวจสอบจำนวนครั้ง มากกว่า เลือกระดับหรือเปล่า
 				if (no >= noLimit) {
 					dialogEndGame("Your Lose !",
-							"Yor Lose The Game ANSWER IS: " + answer);
-					no_lose++;
+							"Yor Lose The Game ANSWER IS: " + answer).setIcon(R.drawable.icon_false48x48);
+					no_lose1++;
 					// save data to database
 					saveDataPlayGame();
 					reStartGame();
 					setLabel();
 
-					score = calScore();
-					txt_score.setText(String.valueOf(score));
+					score1 = calScore();
+					txt_score1.setText(String.valueOf(score1));
 				}
 
 				// ตรวจสอบ ตำแหน่งที่ถูก มากกว่า ที่ตั้งไว้ แสดงว่า ชนะ
 				if (position >= ANSWER_DIGIT) {
-					dialogEndGame("Your Win..", "Your Win ANSWER IS: " + answer);
-					no_win++;
+					dialogEndGame("Your Win..", "Your Win ANSWER IS: " + answer).setIcon(R.drawable.icon_true48x48);
+					no_win1++;
 					// save data to database
 					saveDataPlayGame();
 					reStartGame();
 					setLabel();
-					score = calScore();
-					txt_score.setText(String.valueOf(score));
+					score1 = calScore();
+					txt_score1.setText(String.valueOf(score1));
 				}
+				
 			} else {
-				Toast.makeText(MainGame.this, "Please Input data 4 digit",
+				Toast.makeText(MainGame.this, R.string.msg_waringEng,
 						Toast.LENGTH_LONG).show();
 			}
 		}
@@ -283,11 +353,14 @@ public class MainGame extends ActionBarActivity {
 	private void setLabel() {
 		txtNumber.setText(String.valueOf(number));
 		txtPosition.setText(String.valueOf(position));
-		txt_score.setText(String.valueOf(score));
+		txt_score1.setText(String.valueOf(score1));
+		txt_score2.setText(String.valueOf(score2));
 		txtLastInput.setText(String.valueOf(no_lastinput));
 		txt_no.setText(String.valueOf(no));
-		txtWin.setText(String.valueOf(no_win));
-		txtLose.setText(String.valueOf(no_lose));
+		txtWin1.setText(String.valueOf(no_win1));
+		txtLose1.setText(String.valueOf(no_lose1));
+		txtWin2.setText(String.valueOf(no_win2));
+		txtLose2.setText(String.valueOf(no_lose2));
 
 	}
 
@@ -339,6 +412,7 @@ public class MainGame extends ActionBarActivity {
 			generated.add(next);
 		}
 		Object[] answer = generated.toArray();
+		// convert object[] to integer[]
 		Integer[] integerArray = Arrays.copyOf(answer, answer.length,
 				Integer[].class);
 		return integerArray;
@@ -346,20 +420,20 @@ public class MainGame extends ActionBarActivity {
 
 	// method level
 	private void levelEasy() {
-		// จำนวนครั้งในการเล่น 20 ครั้ง
-		// จะมีตัเลข เฉลยให้ 1 ตัว
-		this.noLimit = 20;
-	}
-
-	private void levelMedium() {
 		// จำนวนครั้งในการเล่น 15 ครั้ง
+		// จะมีตัเลข เฉลยให้ 1 ตัว
 		this.noLimit = 15;
 	}
 
-	private void levelHard() {
+	private void levelMedium() {
 		// จำนวนครั้งในการเล่น 10 ครั้ง
-		//
 		this.noLimit = 10;
+	}
+
+	private void levelHard() {
+		// จำนวนครั้งในการเล่น 5 ครั้ง
+		//
+		this.noLimit = 5;
 
 	}
 
@@ -425,6 +499,10 @@ public class MainGame extends ActionBarActivity {
 				imgPosition4.setImageResource(pic[Integer.parseInt(position4)]);
 				break;
 			default:
+				imgPosition1.setImageResource(pic[10]);
+				imgPosition2.setImageResource(pic[10]);
+				imgPosition3.setImageResource(pic[10]);
+				imgPosition4.setImageResource(pic[10]);
 				break;
 			}
 			msg = "position 1 : " + position1;
@@ -459,7 +537,7 @@ public class MainGame extends ActionBarActivity {
 	}
 
 	private int calScore() {
-		return (noLimit - no) + score;
+		return (noLimit - no) + score1;
 	}
 
 	private void startGame() {
@@ -487,7 +565,7 @@ public class MainGame extends ActionBarActivity {
 	private AlertDialog.Builder dialogEndGame(String title, String message) {
 		AlertDialog.Builder dialog = new AlertDialog.Builder(MainGame.this);
 		dialog.setTitle(title);
-		dialog.setCancelable(false);
+		dialog.setCancelable(false);		
 		dialog.setMessage(message);
 		dialog.setPositiveButton(R.string.btn_main_menu,
 				new DialogInterface.OnClickListener() {
@@ -511,41 +589,35 @@ public class MainGame extends ActionBarActivity {
 
 	}
 
-	/*private AlertDialog.Builder dialogAnswer(String title, String message) {
-		AlertDialog.Builder dialog = new AlertDialog.Builder(MainGame.this);
-		dialog.setTitle(title);
-		dialog.setCancelable(false);
-		dialog.setMessage(message);
-		dialog.setPositiveButton(R.string.btn_main_menu,
-				new DialogInterface.OnClickListener() {
-
-					@Override
-					public void onClick(DialogInterface dialog, int which) {
-						Intent i = new Intent(MainGame.this, MainActivity.class);
-						MainGame.this.startActivity(i);
-						dialog.dismiss();
-					}
-				});
-		dialog.setNegativeButton(R.string.btn_new_game,
-				new DialogInterface.OnClickListener() {
-					@Override
-					public void onClick(DialogInterface arg0, int arg1) {
-
-					}
-				});
-		dialog.show();
-		return dialog;
-
-	}*/
+	/*
+	 * private AlertDialog.Builder dialogAnswer(String title, String message) {
+	 * AlertDialog.Builder dialog = new AlertDialog.Builder(MainGame.this);
+	 * dialog.setTitle(title); dialog.setCancelable(false);
+	 * dialog.setMessage(message);
+	 * dialog.setPositiveButton(R.string.btn_main_menu, new
+	 * DialogInterface.OnClickListener() {
+	 * 
+	 * @Override public void onClick(DialogInterface dialog, int which) { Intent
+	 * i = new Intent(MainGame.this, MainActivity.class);
+	 * MainGame.this.startActivity(i); dialog.dismiss(); } });
+	 * dialog.setNegativeButton(R.string.btn_new_game, new
+	 * DialogInterface.OnClickListener() {
+	 * 
+	 * @Override public void onClick(DialogInterface arg0, int arg1) {
+	 * 
+	 * } }); dialog.show(); return dialog;
+	 * 
+	 * }
+	 */
 
 	private OnClickListener dialogClose = new OnClickListener() {
 		@Override
 		public void onClick(View v) {
 			AlertDialog.Builder dialog = new AlertDialog.Builder(MainGame.this);
-			dialog.setTitle("Exit Game");
+			dialog.setTitle(R.string.msg_title_closeEng);
 			dialog.setIcon(R.drawable.icon_close32x32);
 			dialog.setCancelable(false);
-			dialog.setMessage("Stop Game Now Back To Main Game ");
+			dialog.setMessage(R.string.msg_content_closeEng);
 			dialog.setPositiveButton(R.string.btn_ok,
 					new DialogInterface.OnClickListener() {
 
@@ -581,10 +653,26 @@ public class MainGame extends ActionBarActivity {
 		bean.setLevelPlay(levelIndex);
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		bean.setDateCreate(dateFormat.format(new Date()));
-		bean.setScorePlay(Integer.parseInt(txt_score.getText().toString()));
-		bean.setWinner(Integer.parseInt(txtWin.getText().toString()));
-		bean.setLose(Integer.parseInt(txtLose.getText().toString()));
+		bean.setScorePlay(Integer.parseInt(txt_score1.getText().toString()));
+		bean.setWinner(Integer.parseInt(txtWin1.getText().toString()));
+		bean.setLose(Integer.parseInt(txtLose1.getText().toString()));
 		return bean;
+	}
+
+	private void loadProgressBarNo(int statusHealth) {		
+		switch (levelIndex) {
+		case 0:
+			progressBar.setProgress(100-(statusHealth*7));		
+			break;
+		case 1:
+			progressBar.setProgress(100-(statusHealth*10));		
+			break;
+		case 2:
+			progressBar.setProgress(100-(statusHealth*20));		
+			break;
+		default:
+			break;
+		}
 	}
 
 }

@@ -55,7 +55,7 @@ public class MainSinglePlayer extends ActionBarActivity {
 						
 						Intent intent = new Intent(MainSinglePlayer.this, MainGame.class);
 						System.out.println("txt_player1.getText().toString(): "+txt_player1.getText().toString());
-						intent.putExtra("player", txt_player1.getText().toString());
+						intent.putExtra("player1", txt_player1.getText().toString());
 						intent.putExtra("level",levelSelected);
 						startActivity(intent);
 					} 
